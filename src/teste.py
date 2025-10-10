@@ -3,11 +3,11 @@ import joblib
 from sklearn.metrics import accuracy_score, classification_report, f1_score, confusion_matrix
 import os
 
-MODEL_PATH = "models/best_logistic_regression_tf-idf_model.pkl" 
-TEST_DATA_PATH = "data/test_data_simples_complexo.csv"                
+MODEL_PATH = "src/models/complexo_simples/best_multinomial_naive_bayes_tf-idf_model.pkl" 
+TEST_DATA_PATH = "src/data/test_data_simples_complexo.csv"                
 TEXT_COLUMN = "text"                              
 LABEL_COLUMN = "style"                
-OUTPUT_PREDICTIONS_FILENAME = "results/predictions_output.csv"
+OUTPUT_PREDICTIONS_FILENAME = "src/results/complexo_simples/predictions_output.csv"
 
 if not os.path.exists(MODEL_PATH):
     print(f"Erro: O arquivo do modelo \'{MODEL_PATH}\' não foi encontrado.")

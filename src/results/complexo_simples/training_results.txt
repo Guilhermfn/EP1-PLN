@@ -1,0 +1,61 @@
+Início do Log de Treinamento de Modelos (Resultados Incrementais)
+
+Proporção de Classes no Conjunto de Treinamento:
+  complexo: 13236 (50.10%)
+  simples: 13184 (49.90%)
+Total de amostras de treinamento: 26420
+
+
+
+==================================================
+Modelo: Random Forest (TF-IDF) - Combinação de Parâmetros 1
+Data e Hora: 2025-10-10 10:36:07.260533
+Parâmetros: {'clf__max_depth': None, 'clf__min_samples_leaf': 3, 'clf__n_estimators': 150, 'tfidf__max_df': 0.75, 'tfidf__min_df': 1, 'tfidf__ngram_range': (1, 1)}
+Média Acurácia (Validação Cruzada): 0.7636
+Média F1-Score (Validação Cruzada): 0.7635
+Acurácia no Conjunto de Teste: 0.7708
+F1-Score (weighted) no Conjunto de Teste: 0.7707
+Relatório de Classificação no Conjunto de Teste:
+              precision    recall  f1-score   support
+
+    complexo       0.78      0.75      0.77      3309
+     simples       0.76      0.79      0.77      3297
+
+    accuracy                           0.77      6606
+   macro avg       0.77      0.77      0.77      6606
+weighted avg       0.77      0.77      0.77      6606
+
+Matriz de Confusão no Conjunto de Teste:
+[[2488  821]
+ [ 693 2604]]
+Classes: ['complexo', 'simples']
+
+
+==================================================
+
+
+==================================================
+Modelo: Random Forest (TF-IDF) - Combinação de Parâmetros 2
+Data e Hora: 2025-10-10 10:38:49.203169
+Parâmetros: {'clf__max_depth': None, 'clf__min_samples_leaf': 3, 'clf__n_estimators': 150, 'tfidf__max_df': 0.75, 'tfidf__min_df': 1, 'tfidf__ngram_range': (1, 2)}
+Média Acurácia (Validação Cruzada): 0.7852
+Média F1-Score (Validação Cruzada): 0.7850
+Acurácia no Conjunto de Teste: 0.7946
+F1-Score (weighted) no Conjunto de Teste: 0.7944
+Relatório de Classificação no Conjunto de Teste:
+              precision    recall  f1-score   support
+
+    complexo       0.81      0.77      0.79      3309
+     simples       0.78      0.82      0.80      3297
+
+    accuracy                           0.79      6606
+   macro avg       0.80      0.79      0.79      6606
+weighted avg       0.80      0.79      0.79      6606
+
+Matriz de Confusão no Conjunto de Teste:
+[[2543  766]
+ [ 591 2706]]
+Classes: ['complexo', 'simples']
+
+
+==================================================

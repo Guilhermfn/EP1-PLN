@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from sklearn.model_selection import train_test_split, KFold, ParameterGrid
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -12,8 +13,27 @@ import joblib
 import datetime
 import warnings
 import numpy as np
+from pathlib import Path
 
 warnings.filterwarnings("ignore")  # Ignorar warnings de UndefinedMetricWarning, etc.
+
+# -------------------------
+# Variáveis de caminho (configuração global)
+# -------------------------
+# Arquivo CSV de treino (substitua pelo dataset desejado)
+TRAIN_CSV = "src/data/train_complexo_simples.csv"
+
+# Diretórios de saída
+MODEL_DIR = "src/models/complexo_simples"
+RESULTS_DIR = "src/results/complexo_simples"
+
+# Arquivos de log (serão gravados dentro de RESULTS_DIR)
+LOG_FILE_ALL_RESULTS = os.path.join(RESULTS_DIR, "training_results.txt")
+LOG_FILE_BEST_MODELS = os.path.join(RESULTS_DIR, "best_models_summary.txt")
+
+# Certificar que diretórios existem
+os.makedirs(MODEL_DIR, exist_ok=True)
+os.makedirs(RESULTS_DIR, exist_ok=True)
 
 # -------------------------
 # Word2Vec transformer
@@ -140,12 +160,13 @@ class Word2VecVectorizer(BaseEstimator, TransformerMixin):
 # -------------------------
 # Carregar dados e limpeza
 # -------------------------
-data = pd.read_csv("train_complexo_simples.csv", sep=";")
+data = pd.read_csv(TRAIN_CSV, sep=";")
 before = len(data)
 data = data.dropna(subset=["text"])                 # remove NaN em text
 data = data[data["text"].str.strip() != ""]         # remove strings vazias ou só espaços
 after = len(data)
 
+print(f"Arquivo de treino: {TRAIN_CSV}")
 print(f"Linhas removidas: {before - after}")
 print(f"Total de linhas após limpeza: {after}")
 
@@ -229,9 +250,9 @@ parameters_mnb = {
 
 parameters_lr = {
     "tfidf__ngram_range": [(1, 2), (1, 3)],
-    "tfidf__max_df": [0.75, 0.85, 1.0],
-    "tfidf__min_df": [5, 10],
-    "clf__C": [5.0, 8.0, 25.0],
+    "tfidf__max_df": [0.85, 1.0],
+    "tfidf__min_df": [1, 5],
+    "clf__C": [25, 50, 100, 200],
     "clf__penalty": ["l1", "l2"],
 }
 
@@ -324,45 +345,45 @@ parameters_dummy_w2v = {
 # -------------------------
 models_to_test = {
     # TF-IDF variants (mantidos)
-    "Multinomial Naive Bayes (TF-IDF)": (pipeline_mnb_tfidf, parameters_mnb),
-    "Logistic Regression (TF-IDF)": (pipeline_lr_tfidf, parameters_lr),
+    # "Multinomial Naive Bayes (TF-IDF)": (pipeline_mnb_tfidf, parameters_mnb),
+    
     "Random Forest (TF-IDF)": (pipeline_rf_tfidf, parameters_rf),
     # "Gradient Boosting (TF-IDF)": (pipeline_gb_tfidf, parameters_gb),
     "AdaBoost (TF-IDF)": (pipeline_ab_tfidf, parameters_ab),
     "DummyClassifier (TF-IDF)": (pipeline_dummy_tfidf, parameters_dummy),
 
     # Word2Vec variants (NOTE: MNB omitted aqui)
-    "Logistic Regression (Word2Vec)": (pipeline_lr_w2v, parameters_lr_w2v),
+    
     "Random Forest (Word2Vec)": (pipeline_rf_w2v, parameters_rf_w2v),
     # "Gradient Boosting (Word2Vec)": (pipeline_gb_w2v, parameters_gb_w2v),
     "AdaBoost (Word2Vec)": (pipeline_ab_w2v, parameters_ab_w2v),
     "DummyClassifier (Word2Vec)": (pipeline_dummy_w2v, parameters_dummy_w2v),
+
+    "Logistic Regression (TF-IDF)": (pipeline_lr_tfidf, parameters_lr),
+
+    "Logistic Regression (Word2Vec)": (pipeline_lr_w2v, parameters_lr_w2v),
 }
 
-# Nomes dos arquivos de log
-log_file_all_results = "training_results.txt"
-log_file_best_models = "best_models_summary.txt"
-
-# # Limpar o arquivo de log principal anterior, se existir
-# with open(log_file_all_results, "w", encoding="utf-8") as f:
-#     f.write("Início do Log de Treinamento de Modelos (Resultados Incrementais)\n\n")
-#     class_counts = y_train.value_counts()
-#     total_samples = len(y_train)
-#     f.write("Proporção de Classes no Conjunto de Treinamento:\n")
-#     for cls, count in class_counts.items():
-#         f.write(f"  {cls}: {count} ({count/total_samples:.2%})\n")
-#     f.write(f"Total de amostras de treinamento: {total_samples}\n\n")
-
-# # Limpar o arquivo de log de melhores modelos, se existir
-# with open(log_file_best_models, "w", encoding="utf-8") as f:
-#     f.write("Sumário das Melhores Arquiteturas por Modelo\n\n")
+# Limpar o arquivo de log principal anterior, se existir (opcional)
+with open(LOG_FILE_ALL_RESULTS, "w", encoding="utf-8") as f:
+    f.write("Início do Log de Treinamento de Modelos (Resultados Incrementais)\n\n")
+    class_counts = y_train.value_counts()
+    total_samples = len(y_train)
+    f.write("Proporção de Classes no Conjunto de Treinamento:\n")
+    for cls, count in class_counts.items():
+        f.write(f"  {cls}: {count} ({count/total_samples:.2%})\n")
+    f.write(f"Total de amostras de treinamento: {total_samples}\n\n")
+#
+# Limpar o arquivo de log de melhores modelos, se existir (opcional)
+with open(LOG_FILE_BEST_MODELS, "w", encoding="utf-8") as f:
+    f.write("Sumário das Melhores Arquiteturas por Modelo\n\n")
 
 # -------------------------
 # Loop principal de treino (grid manual com KFold)
 # -------------------------
 for model_name, (base_pipeline, param_grid) in models_to_test.items():
     print(f"\nIniciando testes para o modelo: {model_name}...")
-    
+
     best_score_model = -1  # Para rastrear a melhor acurácia/f1 para este modelo
     best_params_model = None
     best_estimator_model = None
@@ -372,26 +393,26 @@ for model_name, (base_pipeline, param_grid) in models_to_test.items():
     all_params_combinations = list(ParameterGrid(param_grid))
     for i, params in enumerate(all_params_combinations):
         print(f"  Testando combinação {i+1} de {len(all_params_combinations)} para {model_name} com parâmetros: {params}")
-        
+
         # clone para não poluir o pipeline base
         current_pipeline = clone(base_pipeline).set_params(**params)
-        
+
         fold_accuracies = []
         fold_f1_scores = []
-        
+
         for fold, (train_index, val_index) in enumerate(kf.split(X_train), start=1):
             n_splits = kf.get_n_splits()
             print(f"    Processando Fold {fold}/{n_splits} para {model_name} - Combinação {i+1}...")
             X_train_fold, X_val_fold = X_train.iloc[train_index], X_train.iloc[val_index]
             y_train_fold, y_val_fold = y_train.iloc[train_index], y_train.iloc[val_index]
-            
+
             # Treina no fold
             current_pipeline.fit(X_train_fold, y_train_fold)
             y_pred_val = current_pipeline.predict(X_val_fold)
-            
+
             fold_accuracies.append(accuracy_score(y_val_fold, y_pred_val))
             fold_f1_scores.append(f1_score(y_val_fold, y_pred_val, average="weighted"))
-        
+
         avg_accuracy_cv = float(np.mean(fold_accuracies))
         avg_f1_cv = float(np.mean(fold_f1_scores))
 
@@ -400,9 +421,9 @@ for model_name, (base_pipeline, param_grid) in models_to_test.items():
         y_pred_test = current_pipeline.predict(X_test)
         test_accuracy = accuracy_score(y_test, y_pred_test)
         test_f1_score = f1_score(y_test, y_pred_test, average="weighted")
-        
+
         # Salvar resultados desta combinação no log principal
-        with open(log_file_all_results, "a", encoding="utf-8") as f:
+        with open(LOG_FILE_ALL_RESULTS, "a", encoding="utf-8") as f:
             f.write(f"\n\n{'='*50}\n")
             f.write(f"Modelo: {model_name} - Combinação de Parâmetros {i+1}\n")
             f.write(f"Data e Hora: {datetime.datetime.now()}\n")
@@ -423,29 +444,30 @@ for model_name, (base_pipeline, param_grid) in models_to_test.items():
         if avg_accuracy_cv > best_score_model:
             best_score_model = avg_accuracy_cv
             best_params_model = params
-            best_estimator_model = clone(current_pipeline)
+            best_estimator_model = current_pipeline
 
     # Salvar melhor estimador (se houver)
     if best_estimator_model is not None:
         # nome do arquivo inclui indicação TF-IDF ou Word2Vec
         safe_name = model_name.lower().replace(' ', '_').replace('(', '').replace(')', '')
         model_filename = f"best_{safe_name}_model.pkl"
-        joblib.dump(best_estimator_model, model_filename)
-        
-        with open(log_file_all_results, "a", encoding="utf-8") as f:
+        model_path = os.path.join(MODEL_DIR, model_filename)
+        joblib.dump(best_estimator_model, model_path)
+
+        with open(LOG_FILE_ALL_RESULTS, "a", encoding="utf-8") as f:
             f.write(f"\n\n{'='*50}\n")
-            f.write(f"Melhor Arquitetura para {model_name} salva em {model_filename}\n")
+            f.write(f"Melhor Arquitetura para {model_name} salva em {model_path}\n")
             f.write(f"Melhores Parâmetros: {best_params_model}\n")
             f.write(f"Melhor Acurácia (Validação Cruzada): {best_score_model:.4f}\n")
             f.write(f"\n\n{'='*50}\n")
-            
-        with open(log_file_best_models, "a", encoding="utf-8") as f:
+
+        with open(LOG_FILE_BEST_MODELS, "a", encoding="utf-8") as f:
             f.write(f"\n\n{'='*50}\n")
             f.write(f"Modelo: {model_name}\n")
             f.write(f"Melhores Parâmetros: {best_params_model}\n")
             f.write(f"Melhor Acurácia (Validação Cruzada): {best_score_model:.4f}\n")
-            f.write(f"Caminho do Modelo Salvo: {model_filename}\n")
+            f.write(f"Caminho do Modelo Salvo: {model_path}\n")
             f.write(f"\n\n{'='*50}\n")
 
-print(f"\nTodos os testes de parâmetros foram concluídos e os resultados detalhados foram salvos em: {log_file_all_results}")
-print(f"Os melhores modelos para cada tipo de classificador foram salvos como arquivos .pkl e um sumário está em: {log_file_best_models}")
+print(f"\nTodos os testes de parâmetros foram concluídos e os resultados detalhados foram salvos em: {LOG_FILE_ALL_RESULTS}")
+print(f"Os melhores modelos para cada tipo de classificador foram salvos como arquivos .pkl em: {MODEL_DIR} e um sumário está em: {LOG_FILE_BEST_MODELS}")
