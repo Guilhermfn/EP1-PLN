@@ -1,0 +1,15 @@
+# Núcleo de processamento de dados
+pandas==2.2.3
+numpy==1.26.4
+
+# Modelos e Machine Learning
+scikit-learn==1.5.2
+gensim==4.3.3
+joblib==1.4.2
+
+# Utilitários
+tqdm==4.66.5
+nltk==3.9.1
+
+# (Opcional) visualização e debug
+matplotlib==3.9.2

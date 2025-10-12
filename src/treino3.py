@@ -21,11 +21,11 @@ warnings.filterwarnings("ignore")  # Ignorar warnings de UndefinedMetricWarning,
 # Variáveis de caminho (configuração global)
 # -------------------------
 # Arquivo CSV de treino (substitua pelo dataset desejado)
-TRAIN_CSV = "src/data/train_complexo_simples.csv"
+TRAIN_CSV = "src/data/train/train_<atividade>.csv"
 
 # Diretórios de saída
-MODEL_DIR = "src/models/complexo_simples"
-RESULTS_DIR = "src/results/complexo_simples"
+MODEL_DIR = "src/models/<atividade>"
+RESULTS_DIR = "src/results/<atividade>"
 
 # Arquivos de log (serão gravados dentro de RESULTS_DIR)
 LOG_FILE_ALL_RESULTS = os.path.join(RESULTS_DIR, "training_results.txt")
@@ -252,7 +252,7 @@ parameters_lr = {
     "tfidf__ngram_range": [(1, 2), (1, 3)],
     "tfidf__max_df": [0.85, 1.0],
     "tfidf__min_df": [1, 5],
-    "clf__C": [25, 50, 100, 200],
+    "clf__C": [25, 300, 400],
     "clf__penalty": ["l1", "l2"],
 }
 
@@ -292,12 +292,12 @@ parameters_dummy = {
 # Parâmetros (Word2Vec) - keep small to control tempo
 # -------------------------
 parameters_lr_w2v = {
-    "w2v__vector_size": [700,800],
-    "w2v__window": [15,30],
-    "w2v__min_count": [1, 5],
+    "w2v__vector_size": [2000,5000],
+    "w2v__window": [30],
+    "w2v__min_count": [5],
     "w2v__sg": [1],
-    "w2v__use_tfidf_weighting": [False, True],
-    "clf__C": [75,100,120],
+    "w2v__use_tfidf_weighting": [False],
+    "clf__C": [600,1000],
     "clf__penalty": ["l2"],
 }
 
@@ -345,7 +345,7 @@ parameters_dummy_w2v = {
 # -------------------------
 models_to_test = {
     # TF-IDF variants (mantidos)
-    # "Multinomial Naive Bayes (TF-IDF)": (pipeline_mnb_tfidf, parameters_mnb),
+    "Multinomial Naive Bayes (TF-IDF)": (pipeline_mnb_tfidf, parameters_mnb),
     
     "Random Forest (TF-IDF)": (pipeline_rf_tfidf, parameters_rf),
     # "Gradient Boosting (TF-IDF)": (pipeline_gb_tfidf, parameters_gb),
@@ -364,19 +364,19 @@ models_to_test = {
     "Logistic Regression (Word2Vec)": (pipeline_lr_w2v, parameters_lr_w2v),
 }
 
-# Limpar o arquivo de log principal anterior, se existir (opcional)
-with open(LOG_FILE_ALL_RESULTS, "w", encoding="utf-8") as f:
-    f.write("Início do Log de Treinamento de Modelos (Resultados Incrementais)\n\n")
-    class_counts = y_train.value_counts()
-    total_samples = len(y_train)
-    f.write("Proporção de Classes no Conjunto de Treinamento:\n")
-    for cls, count in class_counts.items():
-        f.write(f"  {cls}: {count} ({count/total_samples:.2%})\n")
-    f.write(f"Total de amostras de treinamento: {total_samples}\n\n")
+# # Limpar o arquivo de log principal anterior, se existir (opcional)
+# with open(LOG_FILE_ALL_RESULTS, "w", encoding="utf-8") as f:
+#     f.write("Início do Log de Treinamento de Modelos (Resultados Incrementais)\n\n")
+#     class_counts = y_train.value_counts()
+#     total_samples = len(y_train)
+#     f.write("Proporção de Classes no Conjunto de Treinamento:\n")
+#     for cls, count in class_counts.items():
+#         f.write(f"  {cls}: {count} ({count/total_samples:.2%})\n")
+#     f.write(f"Total de amostras de treinamento: {total_samples}\n\n")
 #
-# Limpar o arquivo de log de melhores modelos, se existir (opcional)
-with open(LOG_FILE_BEST_MODELS, "w", encoding="utf-8") as f:
-    f.write("Sumário das Melhores Arquiteturas por Modelo\n\n")
+# # Limpar o arquivo de log de melhores modelos, se existir (opcional)
+# with open(LOG_FILE_BEST_MODELS, "w", encoding="utf-8") as f:
+#     f.write("Sumário das Melhores Arquiteturas por Modelo\n\n")
 
 # -------------------------
 # Loop principal de treino (grid manual com KFold)

@@ -1,0 +1,90 @@
+
+
+==================================================
+Modelo: DummyClassifier (Word2Vec)
+Melhores Parâmetros: {'w2v__min_count': 1, 'w2v__sg': 1, 'w2v__use_tfidf_weighting': False, 'w2v__vector_size': 100, 'w2v__window': 3}
+Melhor Acurácia (Validação Cruzada): 0.4934
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_dummyclassifier_word2vec_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: Logistic Regression (TF-IDF)
+Melhores Parâmetros: {'clf__C': 25, 'clf__penalty': 'l2', 'tfidf__max_df': 0.85, 'tfidf__min_df': 1, 'tfidf__ngram_range': (1, 2)}
+Melhor Acurácia (Validação Cruzada): 0.8408
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_logistic_regression_tf-idf_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: Logistic Regression (Word2Vec)
+Melhores Parâmetros: {'clf__C': 1000, 'clf__penalty': 'l2', 'w2v__min_count': 5, 'w2v__sg': 1, 'w2v__use_tfidf_weighting': False, 'w2v__vector_size': 5000, 'w2v__window': 30}
+Melhor Acurácia (Validação Cruzada): 0.8101
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_logistic_regression_word2vec_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: Multinomial Naive Bayes (TF-IDF)
+Melhores Parâmetros: {'clf__alpha': 0.1, 'tfidf__max_df': 0.75, 'tfidf__min_df': 5, 'tfidf__ngram_range': (1, 2)}
+Melhor Acurácia (Validação Cruzada): 0.8418
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_multinomial_naive_bayes_tf-idf_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: Random Forest (TF-IDF)
+Melhores Parâmetros: {'clf__max_depth': None, 'clf__min_samples_leaf': 5, 'clf__n_estimators': 200, 'tfidf__max_df': 0.75, 'tfidf__min_df': 1, 'tfidf__ngram_range': (1, 2)}
+Melhor Acurácia (Validação Cruzada): 0.8089
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_random_forest_tf-idf_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: AdaBoost (TF-IDF)
+Melhores Parâmetros: {'clf__learning_rate': 1.0, 'clf__n_estimators': 100, 'tfidf__max_df': 0.75, 'tfidf__min_df': 1, 'tfidf__ngram_range': (1, 2)}
+Melhor Acurácia (Validação Cruzada): 0.7494
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_adaboost_tf-idf_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: DummyClassifier (TF-IDF)
+Melhores Parâmetros: {'tfidf__max_df': 1.0, 'tfidf__min_df': 1, 'tfidf__ngram_range': (1, 1)}
+Melhor Acurácia (Validação Cruzada): 0.4934
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_dummyclassifier_tf-idf_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: Random Forest (Word2Vec)
+Melhores Parâmetros: {'clf__min_samples_leaf': 5, 'clf__n_estimators': 200, 'w2v__min_count': 1, 'w2v__sg': 1, 'w2v__use_tfidf_weighting': False, 'w2v__vector_size': 100, 'w2v__window': 5}
+Melhor Acurácia (Validação Cruzada): 0.7226
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_random_forest_word2vec_model.pkl
+
+
+==================================================
+
+
+==================================================
+Modelo: AdaBoost (Word2Vec)
+Melhores Parâmetros: {'clf__learning_rate': 0.5, 'clf__n_estimators': 100, 'w2v__min_count': 1, 'w2v__sg': 1, 'w2v__use_tfidf_weighting': False, 'w2v__vector_size': 100, 'w2v__window': 5}
+Melhor Acurácia (Validação Cruzada): 0.7185
+Caminho do Modelo Salvo: src/models/literal_dinamico\best_adaboost_word2vec_model.pkl
+
+
+==================================================
