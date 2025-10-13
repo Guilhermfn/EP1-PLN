@@ -1,4 +1,5 @@
 import os
+import sys
 import pandas as pd
 from sklearn.model_selection import train_test_split, KFold, ParameterGrid
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -17,15 +18,20 @@ from pathlib import Path
 
 warnings.filterwarnings("ignore")  # Ignorar warnings de UndefinedMetricWarning, etc.
 
-# -------------------------
-# Variáveis de caminho (configuração global)
-# -------------------------
-# Arquivo CSV de treino (substitua pelo dataset desejado)
-TRAIN_CSV = "src/data/train/train_<atividade>.csv"
+if len(sys.argv) < 2:
+    print("Erro: Forneça o nome da atividade como um argumento.")
+    print("Exemplo de uso: python treino3.py arcaico_moderno")
+    sys.exit(1)
+
+atividade = sys.argv[1]
+print(f"🚀 Iniciando treino para a atividade: {atividade}")
+
+# Arquivo CSV de treino
+TRAIN_CSV = f"src/data/train/train_{atividade}.csv"
 
 # Diretórios de saída
-MODEL_DIR = "src/models/<atividade>"
-RESULTS_DIR = "src/results/<atividade>"
+MODEL_DIR = f"src/models/{atividade}"
+RESULTS_DIR = f"src/results/{atividade}"
 
 # Arquivos de log (serão gravados dentro de RESULTS_DIR)
 LOG_FILE_ALL_RESULTS = os.path.join(RESULTS_DIR, "training_results.txt")
@@ -162,8 +168,8 @@ class Word2VecVectorizer(BaseEstimator, TransformerMixin):
 # -------------------------
 data = pd.read_csv(TRAIN_CSV, sep=";")
 before = len(data)
-data = data.dropna(subset=["text"])                 # remove NaN em text
-data = data[data["text"].str.strip() != ""]         # remove strings vazias ou só espaços
+data = data.dropna(subset=["text"])              # remove NaN em text
+data = data[data["text"].str.strip() != ""]      # remove strings vazias ou só espaços
 after = len(data)
 
 print(f"Arquivo de treino: {TRAIN_CSV}")
@@ -346,21 +352,17 @@ parameters_dummy_w2v = {
 models_to_test = {
     # TF-IDF variants (mantidos)
     "Multinomial Naive Bayes (TF-IDF)": (pipeline_mnb_tfidf, parameters_mnb),
-    
     "Random Forest (TF-IDF)": (pipeline_rf_tfidf, parameters_rf),
     # "Gradient Boosting (TF-IDF)": (pipeline_gb_tfidf, parameters_gb),
     "AdaBoost (TF-IDF)": (pipeline_ab_tfidf, parameters_ab),
     "DummyClassifier (TF-IDF)": (pipeline_dummy_tfidf, parameters_dummy),
 
     # Word2Vec variants (NOTE: MNB omitted aqui)
-    
     "Random Forest (Word2Vec)": (pipeline_rf_w2v, parameters_rf_w2v),
     # "Gradient Boosting (Word2Vec)": (pipeline_gb_w2v, parameters_gb_w2v),
     "AdaBoost (Word2Vec)": (pipeline_ab_w2v, parameters_ab_w2v),
     "DummyClassifier (Word2Vec)": (pipeline_dummy_w2v, parameters_dummy_w2v),
-
     "Logistic Regression (TF-IDF)": (pipeline_lr_tfidf, parameters_lr),
-
     "Logistic Regression (Word2Vec)": (pipeline_lr_w2v, parameters_lr_w2v),
 }
 
