@@ -11,11 +11,11 @@ Repositório criado para o *Exercício Prático 1* da disciplina *Introdução a
 ```
 EP1-PLN/
 ├─ src/
-│  ├─ data/                         # datasets de treino/teste
+│  ├─ data/train                       # datasets de treino/teste
 │  │  ├─ train_arcaico_moderno.csv
 │  │  ├─ train_complexo_simples.csv
-│  │  ├─ train_literal_dinamico.csv
-│  │  └─ test_data_simples_complexo.csv
+│  │  └─ train_literal_dinamico.csv
+│  │  
 │  ├─ models/                       # modelos treinados (salvos automaticamente)
 │  │  ├─ arcaico_moderno/
 │  │  ├─ complexo_simples/
@@ -28,9 +28,6 @@ EP1-PLN/
 │  └─ teste.py                      # script para carregar modelo e gerar predições
 └─ 04c-EP1 (1).pdf                  # slides / enunciado do EP
 ```
-
-> Observação: há arquivos de log e um `best_multinomial_naive_bayes_tf-idf_model.pkl` já salvos para a tarefa *complexo_simples* como exemplo.
-
 ---
 
 ## O que este repositório resolve (mapeamento com os slides)
@@ -124,7 +121,7 @@ Saída:
 
 ## Formato dos dados
 
-Os arquivos CSV na pasta `src/data/` possuem formato com cabeçalho e separador `;`. As colunas que o código espera são:
+Os arquivos CSV na pasta `src/data/train/` possuem formato com cabeçalho e separador `;`. As colunas que o código espera são:
 
 - `text` — texto (string) a ser classificado.
 - `style` — rótulo (classe binária, por exemplo: `complexo` / `simples`) — usado apenas durante treino ou quando disponível no CSV de teste para avaliação.

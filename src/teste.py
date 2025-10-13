@@ -9,10 +9,20 @@ from gensim.utils import simple_preprocess
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 MODEL_PATH = "src/models/<atividade>/<modelo_escolhido>.pkl"
+# Exemplos:
+# MODEL_PATH = "src/models/arcaico_moderno/best_logistic_regression_tf-idf_model.pkl.pkl"
+# MODEL_PATH = "src/models/literal_dinamico/best_logistic_regression_tf-idf_model.pkl.pkl"
+# MODEL_PATH = "src/models/complexo_simples/best_logistic_regression_tf-idf_model.pkl.pkl"
+
 TEST_DATA_PATH = "src/data/teste/<arquivo_teste>.csv"                
 TEXT_COLUMN = "text"                              
-LABEL_COLUMN = "style"                
+LABEL_COLUMN = "style"    
+
 OUTPUT_PREDICTIONS_FILENAME = "src/results/<atividade>/predictions_output_<atividade>.csv"
+#Exemplos:
+# OUTPUT_PREDICTIONS_FILENAME = "src/results/arcaico_moderno/predictions_output_arcaico_moderno.csv"
+# OUTPUT_PREDICTIONS_FILENAME = "src/results/literal_dinamico/predictions_output_literal_dinamico.csv"
+# OUTPUT_PREDICTIONS_FILENAME = "src/results/complexo_simples/predictions_output_complexo_simples.csv"
 
 if not os.path.exists(MODEL_PATH):
     print(f"Erro: O arquivo do modelo \'{MODEL_PATH}\' não foi encontrado.")
