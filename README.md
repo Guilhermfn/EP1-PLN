@@ -67,7 +67,7 @@ O script principal de treino é `src/treino3.py`. Ele já vem configurado, por p
 
 ```python
 # Arquivo CSV de treino (substitua pelo dataset desejado)
-TRAIN_CSV = "src/data/train_complexo_simples.csv"
+TRAIN_CSV = "src/data/train/train_complexo_simples.csv"
 
 # Diretórios de saída
 MODEL_DIR = "src/models/complexo_simples"
@@ -101,7 +101,7 @@ Por padrão, `src/teste.py` usa as constantes no topo do arquivo (ajuste conform
 
 ```python
 MODEL_PATH = "src/models/complexo_simples/best_multinomial_naive_bayes_tf-idf_model.pkl"
-TEST_DATA_PATH = "src/data/test_data_simples_complexo.csv"
+TEST_DATA_PATH = "src/data/teste/test_data_simples_complexo.csv"
 OUTPUT_PREDICTIONS_FILENAME = "src/results/complexo_simples/predictions_output.csv"
 TEXT_COLUMN = "text"
 LABEL_COLUMN = "style"  # se presente, o script calcula métricas
