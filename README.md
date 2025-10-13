@@ -77,12 +77,12 @@ RESULTS_DIR = "src/results/complexo_simples"
 2. Para treinar a **tarefa complexo vs simples** (padrão):
 
 ```bash
-python src/treino3.py
+python src/treino3.py <atividade>
 ```
 
 3. Para treinar outra tarefa (ex.: arcaico vs moderno):
 
-- Edite as variáveis `TRAIN_CSV`, `MODEL_DIR` e `RESULTS_DIR` no topo de `src/treino3.py` para apontarem para `train_arcaico_moderno.csv` e suas pastas correspondentes (por exemplo `src/models/arcaico_moderno` / `src/results/arcaico_moderno`) e então rode `python src/treino3.py`.
+- rode `python src/treino3.py` <atividade> sendo atividade uma das tres: arcaico_moderno, complexo_simples ou literal_dinamico.
 
 **O que o script faz**
 - Carrega o CSV (`;` como separador — verifique o cabeçalho dos arquivos CSV em `src/data`).
@@ -100,9 +100,6 @@ O script `src/teste.py` foi criado para carregar um modelo salvo e gerar prediç
 Por padrão, `src/teste.py` usa as constantes no topo do arquivo (ajuste conforme necessário):
 
 ```python
-MODEL_PATH = "src/models/complexo_simples/best_multinomial_naive_bayes_tf-idf_model.pkl"
-TEST_DATA_PATH = "src/data/teste/test_data_simples_complexo.csv"
-OUTPUT_PREDICTIONS_FILENAME = "src/results/complexo_simples/predictions_output.csv"
 TEXT_COLUMN = "text"
 LABEL_COLUMN = "style"  # se presente, o script calcula métricas
 ```

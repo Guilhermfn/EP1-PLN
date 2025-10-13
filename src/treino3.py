@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")  # Ignorar warnings de UndefinedMetricWarning,
 
 if len(sys.argv) < 2:
     print("Erro: Forneça o nome da atividade como um argumento.")
-    print("Exemplo de uso: python treino3.py arcaico_moderno")
+    print("Exemplo de uso: python src/treino3.py arcaico_moderno")
     sys.exit(1)
 
 atividade = sys.argv[1]

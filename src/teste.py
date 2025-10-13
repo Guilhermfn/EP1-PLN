@@ -11,7 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 if len(sys.argv) != 3:
     print("Erro: Forneça a <atividade> e o <modelo_escolhido> como argumentos.")
-    print("Exemplo de uso: python teste.py arcaico_moderno best_adaboost_tf-idf_model")
+    print("Exemplo de uso: python src/teste.py arcaico_moderno best_adaboost_tf-idf_model")
     sys.exit(1)
 
 atividade = sys.argv[1]
