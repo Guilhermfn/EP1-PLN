@@ -11,7 +11,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 if len(sys.argv) != 3:
     print("Erro: Forneça a <atividade> e o <modelo_escolhido> como argumentos.")
-    print("Exemplo de uso: python src/teste.py arcaico_moderno best_adaboost_tf-idf_model")
+    print("Exemplo de uso: python src/teste.py arcaico_moderno best_logistic_regression_tf-idf_model")
     sys.exit(1)
 
 atividade = sys.argv[1]
@@ -19,7 +19,7 @@ modelo_escolhido = sys.argv[2]
 print(f"🚀 Iniciando teste para a atividade: '{atividade}' com o modelo: '{modelo_escolhido}'")
 
 MODEL_PATH = f"src/models/{atividade}/{modelo_escolhido}.pkl"
-TEST_DATA_PATH = f"src/data/test/test_{atividade}.csv"
+TEST_DATA_PATH = f"src/data/teste/test_{atividade}.csv"
 TEXT_COLUMN = "text"
 LABEL_COLUMN = "style"
 OUTPUT_PREDICTIONS_FILENAME = f"src/results/{atividade}/predictions_output_{atividade}.csv"
@@ -123,7 +123,20 @@ print(f"Carregando modelo de: {MODEL_PATH}")
 model = joblib.load(MODEL_PATH)
 
 print(f"Carregando dados de teste de: {TEST_DATA_PATH}")
-test_data = pd.read_csv(TEST_DATA_PATH, sep=";")
+try:
+    # Tentar ler como CSV com uma coluna
+    test_data = pd.read_csv(TEST_DATA_PATH, encoding='latin-1', header=None, names=[TEXT_COLUMN])
+    print("Arquivo lido como CSV com uma coluna")
+except pd.errors.ParserError:
+    try:
+        # Se falhar, tentar ler como arquivo de texto simples
+        with open(TEST_DATA_PATH, 'r', encoding='latin-1') as f:
+            lines = [line.strip() for line in f.readlines()]
+        test_data = pd.DataFrame({TEXT_COLUMN: lines})
+        print("Arquivo lido como texto simples (uma linha por documento)")
+    except Exception as e:
+        print(f"Erro ao ler o arquivo: {e}")
+        exit(1)
 
 if TEXT_COLUMN not in test_data.columns:
     print(f"Erro: A coluna de texto '{TEXT_COLUMN}' não foi encontrada nos dados de teste.")
